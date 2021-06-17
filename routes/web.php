@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Str;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,9 +18,11 @@ use Illuminate\Support\Facades\Route;
 Route::view('/', 'welcome');
 
 Route::get('/example', function() {
-   $response = Http::retry(2, 500)->post('https://jsonplaceholder.typicode.com/posts', [
-       'userId' => 11
-   ]);
+   $string = '    Hello from our web.php    ';
 
-   dd($response->headers());
+   $newString = Str::of($string)
+       ->trim()
+       ->replaceLast('php' ,'jpg');
+
+   dd($newString);
 });
