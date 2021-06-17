@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,11 +15,11 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::view('/', 'welcome');
-//Route::view('/example', 'example');
 
 Route::get('/example', function() {
-    return view('example', [
-        'info' => 'Very cool information'
-    ]);
+   $response = Http::retry(2, 500)->post('https://jsonplaceholder.typicode.com/posts', [
+       'userId' => 11
+   ]);
+
+   dd($response->headers());
 });
-//Route::get('')
