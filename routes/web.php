@@ -17,6 +17,8 @@ use Illuminate\Support\Str;
 
 Route::view('/', 'welcome');
 
+Route::get('/users/{user}/posts/{post:slug}', 'App\Http\Controllers\PostController@show');
+
 Route::get('/example', function() {
    $string = '    Hello from our web.php    ';
 
