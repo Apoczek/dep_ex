@@ -8,8 +8,8 @@ use Illuminate\Http\Request;
 
 class PostController extends Controller
 {
-    public function show(User $user, Post $post)
+    public function show(Post $post, $slug)
     {
-        dd($post);
+        return view('welcome', compact('post'));
     }
 }

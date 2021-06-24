@@ -1,5 +1,8 @@
 <?php
 
+use App\Casts\UserCode;
+use App\Models\Post;
+use App\Models\User;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
@@ -15,10 +18,29 @@ use Illuminate\Support\Str;
 |
 */
 
-Route::view('/', 'welcome');
+Route::view('/', 'home');
+
+Route::view('contact', 'contact');
+Route::view('about', 'about');
+
+Route::get('customers', 'App\Http\Controllers\CustomerController@list');
+Route::post('customers', 'App\Http\Controllers\CustomerController@store');
+
 
 Route::get('/users/{user}/posts/{post:slug}', 'App\Http\Controllers\PostController@show');
+Route::get('query-casts', function() {
+    $users = User::select([
+        'users.*',
+        'last_posted_at' => Post::selectRaw('MAX(created_at)')
+        ->whereColumn('user_id', 'users.id')
+    ])
+        ->withCasts([
+            'last_posted_at' => UserCode::class
+        ])
+        ->get();
 
+    dd($users->first()->last_posted_at);
+});
 Route::get('/example', function() {
    $string = '    Hello from our web.php    ';
 
@@ -28,3 +50,8 @@ Route::get('/example', function() {
 
    dd($newString);
 });
+Route::get('/email', function() {
+    return new \App\Mail\UserRegisteredMail();
+});
+Route::get('profile/{profile}', 'App\Http\Controllers\ProfileController@show');
+Route::get('posts/{post}-{slug}', 'App\Http\Controllers\PostController@show');
