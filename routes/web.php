@@ -19,10 +19,11 @@ use Illuminate\Support\Str;
 */
 
 Route::view('/', 'home');
-Route::get('contact', 'App\Http\Controllers\ContactFormController@create');
-Route::post('contact', 'App\Http\Controllers\ContactFormController@store');
 
-Route::view('about', 'about');
+Route::get('contact', 'App\Http\Controllers\ContactFormController@create')->name('contact.create');
+Route::post('contact', 'App\Http\Controllers\ContactFormController@store')->name('contact.store');
+
+Route::view('about', 'about')->middleware('test');
 
 //Route::get('customers', 'App\Http\Controllers\CustomerController@index');
 //Route::get('customers/create', 'App\Http\Controllers\CustomerController@create');
@@ -63,3 +64,7 @@ Route::get('/email', function() {
 });
 Route::get('profile/{profile}', 'App\Http\Controllers\ProfileController@show');
 Route::get('posts/{post}-{slug}', 'App\Http\Controllers\PostController@show');
+
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
