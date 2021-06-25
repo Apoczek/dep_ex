@@ -19,12 +19,20 @@ use Illuminate\Support\Str;
 */
 
 Route::view('/', 'home');
+Route::get('contact', 'App\Http\Controllers\ContactFormController@create');
+Route::post('contact', 'App\Http\Controllers\ContactFormController@store');
 
-Route::view('contact', 'contact');
 Route::view('about', 'about');
 
-Route::get('customers', 'App\Http\Controllers\CustomerController@list');
-Route::post('customers', 'App\Http\Controllers\CustomerController@store');
+//Route::get('customers', 'App\Http\Controllers\CustomerController@index');
+//Route::get('customers/create', 'App\Http\Controllers\CustomerController@create');
+//Route::post('customers', 'App\Http\Controllers\CustomerController@store');
+//Route::get('customers/{customer}', 'App\Http\Controllers\CustomerController@show');
+//Route::get('customers/{customer}/edit', 'App\Http\Controllers\CustomerController@edit');
+//Route::patch('customers/{customer}', 'App\Http\Controllers\CustomerController@update');
+//Route::delete('customers/{customer}', 'App\Http\Controllers\CustomerController@destroy');
+
+Route::resource('customers', 'App\Http\Controllers\CustomerController');
 
 
 Route::get('/users/{user}/posts/{post:slug}', 'App\Http\Controllers\PostController@show');

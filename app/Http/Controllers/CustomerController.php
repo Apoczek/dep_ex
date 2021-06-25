@@ -2,32 +2,67 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Company;
 use App\Models\Customer;
 use Illuminate\Http\Request;
 
 class CustomerController extends Controller
 {
-    public function list()
+    public function index()
     {
-        $activeCustomers = Customer::where('active', 1)->get();
-        $inactiveCustomers = Customer::where('active', 0)->get();
+        $customers = Customer::all();
 
-        return view('internals.customers', compact('activeCustomers', 'inactiveCustomers'));
+        return view('customers.index', compact('customers'));
+    }
+
+    public function create()
+    {
+        $companies = Company::all();
+        $customer = new Customer();
+
+        return view('customers.create', compact('companies', 'customer'));
     }
 
     public function store()
     {
-        $data = request()->validate([
+        Customer::create($this->validateRequest());
+
+        return redirect('customers');
+    }
+
+    public function show(Customer $customer)
+    {
+        return view('customers.show', compact('customer'));
+    }
+
+    public function edit(Customer $customer)
+    {
+        $companies = Company::all();
+
+        return view('customers.edit', compact('customer','companies'));
+    }
+
+    public function update(Customer $customer)
+    {
+        $customer->update($this->validateRequest());
+
+        return redirect('customers/' . $customer->id);
+    }
+
+    public function destroy(Customer $customer)
+    {
+        $customer->delete();
+
+        return redirect('customers');
+    }
+
+    private function validateRequest()
+    {
+        return request()->validate([
             'name' => 'required|min:3',
             'email' => 'required|email',
-            'active' => 'required'
+            'active' => 'required',
+            'company_id' => 'required'
         ]);
-        $customer = new Customer();
-        $customer->name = request('name');
-        $customer->email = request('email');
-        $customer->active = request('active');
-        $customer->save();
-
-        return back();
     }
 }
